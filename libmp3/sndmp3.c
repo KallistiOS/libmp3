@@ -18,8 +18,6 @@
 #include <mp3/sndserver.h>
 #include <mp3/sndmp3.h>
 
-CVSID("$Id: sndmp3.c,v 1.6 2003/06/19 04:33:03 bardtx Exp $");
-
 /************************************************************************/
 #include <mhead.h>		/* From xingmp3 */
 #include <port.h>		/* From xingmp3 */

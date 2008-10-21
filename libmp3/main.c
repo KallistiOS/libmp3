@@ -7,8 +7,6 @@
 
 #include <kos.h>
 
-CVSID("$Id: main.c,v 1.2 2002/01/06 00:40:33 bardtx Exp $");
-
 int sndserver_thread(void *blagh) {
 	printf("sndserver: started [DEBUG]\r\n");
 	printf("sndserver: pid is %d; capabilities: MP3, SFX\r\n", thd_get_current()->tid);
