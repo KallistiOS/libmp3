@@ -2,8 +2,6 @@
 #
 # libmp3/Makefile
 # (c)2001 Dan Potter
-#   
-# $Id: Makefile,v 1.2 2002/02/10 06:36:38 bardtx Exp $
 
 OBJS = main.o sndmp3.o
 

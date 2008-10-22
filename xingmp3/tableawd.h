@@ -21,7 +21,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 	
-	$Id: tableawd.h,v 1.1.1.1 2001/09/26 07:05:08 bardtx Exp $
 ____________________________________________________________________________*/
 
 /* decoder analysis window gen by dinit.c (asm version table gen) */

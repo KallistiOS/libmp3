@@ -8,7 +8,6 @@
    DOES NOT CURRENTLY WORK.
 */
 
-static char id[] = "TRYP $Id: sndmp3_mpglib.c,v 1.1.1.1 2001/09/26 07:05:08 bardtx Exp $";
 
 
 /* This library is designed to be called from another program in a thread. It
