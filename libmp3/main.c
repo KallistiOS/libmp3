@@ -7,20 +7,20 @@
 
 #include <kos.h>
 
-int sndserver_thread(void *blagh) {
+void *sndserver_thread(void *blagh) {
 	printf("sndserver: started [DEBUG]\r\n");
 	printf("sndserver: pid is %d; capabilities: MP3, SFX\r\n", thd_get_current()->tid);
 
 	sndmp3_mainloop();
 	
 	printf("sndserver exited\r\n");
-	return 0;
+	return NULL;
 }
 
 int mp3_init() {
 	if (snd_stream_init() < 0)
 		return -1;
-	if (thd_create(sndserver_thread, NULL) != NULL) {
+	if (thd_create(1, sndserver_thread, NULL) != NULL) {
 		sndmp3_wait_start();
 		return 0;
 	} else
