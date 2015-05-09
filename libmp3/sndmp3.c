@@ -8,15 +8,15 @@
 
 /* This library is designed to be called from another program in a thread. It
    expects an input filename, and it will do all the setup and playback work.
-  
+
    This requires a working math library for m4-single-only (such as newlib).
-   
+
  */
 
 #include <kos.h>
 #include <assert.h>
-#include <mp3/sndserver.h>
-#include <mp3/sndmp3.h>
+#include "sndserver.h"
+#include "sndmp3.h"
 
 /************************************************************************/
 #include <mhead.h>		/* From xingmp3 */
@@ -131,7 +131,7 @@ static void* xing_callback(snd_stream_hnd_t hnd, int size, int * actual) {
 
 		bs_ptr += x.in_bytes; bs_count -= x.in_bytes;
 		pcm_ptr += x.out_bytes; pcm_count += x.out_bytes;
-		
+
 		frames++;
 		/*if (!(frames % 64)) {
 			printf("Decoded %d frames    \r", frames);
@@ -306,14 +306,14 @@ static semaphore_t *sndmp3_halt_sem;
 /* Loop flag */
 static volatile int sndmp3_loop;
 
-/* Call this function as a thread to handle playback. Playback will 
+/* Call this function as a thread to handle playback. Playback will
    stop and this thread will return when you call sndmp3_shutdown(). */
 static void sndmp3_thread() {
 	int sj;
 
 	stream_hnd = snd_stream_alloc(NULL, SND_STREAM_BUFFER_MAX);
 	assert( stream_hnd != -1 );
-	
+
 	/* Main command loop */
 	while(sndmp3_status != STATUS_QUIT) {
 		switch(sndmp3_status) {
@@ -365,7 +365,7 @@ static void sndmp3_thread() {
 				break;
 		}
 	}
-	
+
 	/* Done: clean up */
 	xing_shutdown();
 	snd_stream_stop(stream_hnd);
@@ -384,7 +384,7 @@ int sndmp3_start(const char *fn, int loop) {
 	if (fn) {
 		if (xing_init(fn) < 0)
 			return -1;
-	
+
 		/* Set looping status */
 		sndmp3_loop = loop;
 	}
@@ -438,7 +438,7 @@ static void sndmp3_svc_init() {
 	ssabi.hdr.version = ABI_MAKE_VER(1,0,0);
 
 	ssabi.shutdown = sndmp3_shutdown;
-	
+
 	ssabi.mp3_start = sndmp3_start;
 	ssabi.mp3_stop = sndmp3_stop;
 	ssabi.mp3_volume = sndmp3_volume;
@@ -446,7 +446,7 @@ static void sndmp3_svc_init() {
 	ssabi.sfx_load = sfx_load;
 	ssabi.sfx_play = sfx_play;
 	ssabi.sfx_unload_all = sfx_unload_all;
-	
+
 	svcmpx->add_handler("sndsrv", &ssabi);
 } */
 
@@ -471,4 +471,3 @@ void sndmp3_mainloop() {
 	/* Thread exited, so we were requested to quit */
 	/* svcmpx->remove_handler("sndsrv"); */
 }
-

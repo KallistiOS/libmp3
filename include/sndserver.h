@@ -10,9 +10,6 @@
 #include <sys/cdefs.h>
 __BEGIN_DECLS
 
-#include <mp3/sndmp3.h>
-#include <mp3/sfxmgr.h>
-
 /* Starts the MP3 server thread */
 int mp3_init();
 
@@ -31,4 +28,3 @@ void mp3_volume(int vol);
 __END_DECLS
 
 #endif	/* __SNDSERVER_H */
-
