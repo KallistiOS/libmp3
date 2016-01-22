@@ -301,7 +301,7 @@ void sndmp3_wait_start() {
 }
 
 /* Semaphore to halt sndmp3 until a command comes in */
-static semaphore_t *sndmp3_halt_sem;
+static semaphore_t sndmp3_halt_sem = SEM_INITIALIZER(0);
 
 /* Loop flag */
 static volatile int sndmp3_loop;
@@ -309,8 +309,6 @@ static volatile int sndmp3_loop;
 /* Call this function as a thread to handle playback. Playback will
    stop and this thread will return when you call sndmp3_shutdown(). */
 static void sndmp3_thread() {
-	int sj;
-
 	stream_hnd = snd_stream_alloc(NULL, SND_STREAM_BUFFER_MAX);
 	assert( stream_hnd != -1 );
 
@@ -322,7 +320,7 @@ static void sndmp3_thread() {
 				break;
 			case STATUS_READY:
 				printf("sndserver: waiting on semaphore\r\n");
-				sem_wait(sndmp3_halt_sem);
+				sem_wait(&sndmp3_halt_sem);
 				printf("sndserver: released from semaphore\r\n");
 				break;
 			case STATUS_STARTING:
@@ -340,7 +338,6 @@ static void sndmp3_thread() {
 				sndmp3_status = STATUS_READY;
 				break;
 			case STATUS_PLAYING: {
-				sj = jiffies;
 				if (snd_stream_poll(stream_hnd) < 0) {
 					if (sndmp3_loop) {
 						printf("sndserver: restarting '%s'\r\n", mp3_last_fn);
@@ -398,7 +395,7 @@ int sndmp3_start(const char *fn, int loop) {
 		sndmp3_status = STATUS_STARTING;
 	else
 		sndmp3_status = STATUS_REINIT;
-	sem_signal(sndmp3_halt_sem);
+	sem_signal(&sndmp3_halt_sem);
 
 	return 0;
 }
@@ -417,7 +414,7 @@ void sndmp3_stop() {
 /* Shutdown the player */
 void sndmp3_shutdown() {
 	sndmp3_status = STATUS_QUIT;
-	sem_signal(sndmp3_halt_sem);
+	sem_signal(&sndmp3_halt_sem);
 	while (sndmp3_status != STATUS_ZOMBIE)
 		thd_pass();
 	spu_disable();
@@ -452,8 +449,8 @@ static void sndmp3_svc_init() {
 
 /* The main loop for the sound server */
 void sndmp3_mainloop() {
-	/* Allocate a semaphore for temporarily halting sndmp3 */
-	sndmp3_halt_sem = sem_create(0);
+	/* Initialize the halt semaphore, in case it needs to be done... */
+    sem_init(&sndmp3_halt_sem, 0);
 
 	/* Setup an ABI for other programs */
 	/* sndmp3_svc_init(); */
@@ -466,7 +463,7 @@ void sndmp3_mainloop() {
 	sndmp3_thread();
 
 	/* Free the semaphore */
-	sem_destroy(sndmp3_halt_sem);
+	sem_destroy(&sndmp3_halt_sem);
 
 	/* Thread exited, so we were requested to quit */
 	/* svcmpx->remove_handler("sndsrv"); */
