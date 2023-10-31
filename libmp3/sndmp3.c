@@ -174,7 +174,7 @@ static int xing_init(const char *fn) {
 		bs_buffer = malloc(BS_SIZE);
 	bs_ptr = bs_buffer; bs_count = 0;
 	if (pcm_buffer == NULL)
-		pcm_buffer = malloc(PCM_SIZE);
+		pcm_buffer = memalign(32, PCM_SIZE);
 	pcm_ptr = pcm_buffer; pcm_count = pcm_discard = 0;
 
 	/* Fill bitstream buffer */
