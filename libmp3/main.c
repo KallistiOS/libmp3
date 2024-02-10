@@ -6,6 +6,7 @@
 */
 
 #include <kos.h>
+#include "sndmp3.h"
 
 void *sndserver_thread(void *blagh) {
 	printf("sndserver: started [DEBUG]\r\n");
