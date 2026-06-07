@@ -1,11 +1,13 @@
 /* KallistiOS ##version##
 
    libmp3 main.c
-   (c)2000-2001 Dan Potter
+   (c)2000-2001 Megan Potter
 
 */
 
-#include <kos.h>
+#include <stdio.h>
+#include <kos/thread.h>
+#include <dc/sound/stream.h>
 #include "sndmp3.h"
 
 void *sndserver_thread(void *blagh) {
@@ -18,7 +20,7 @@ void *sndserver_thread(void *blagh) {
 	return NULL;
 }
 
-int mp3_init() {
+int mp3_init(void) {
 	if (snd_stream_init() < 0)
 		return -1;
 	if (thd_create(1, sndserver_thread, NULL) != NULL) {

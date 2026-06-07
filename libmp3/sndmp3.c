@@ -1,7 +1,7 @@
 /* KallistiOS ##version##
 
    sndmp3.c
-   Copyright (C)2000,2004 Dan Potter
+   Copyright (C)2000,2004 Megan Potter
 
    An MP3 player using sndstream and XingMP3
 */
@@ -13,10 +13,21 @@
 
  */
 
-#include <kos.h>
+
 #include <assert.h>
+#include <malloc.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "sndserver.h"
 #include "sndmp3.h"
+
+#include <dc/spu.h>
+#include <dc/sound/stream.h>
+#include <kos/sem.h>
+#include <kos/thread.h>
 
 /************************************************************************/
 #include <mhead.h>		/* From xingmp3 */
@@ -49,7 +60,7 @@ static int pcm_count, pcm_discard;
 static snd_stream_hnd_t stream_hnd = -1;
 
 /* MPEG file */
-static uint32 mp3_fd;
+static uint32_t mp3_fd;
 static int		frame_bytes;
 static MPEG		mpeg;
 static MPEG_HEAD	head;
@@ -62,7 +73,7 @@ static char mp3_last_fn[256];
 /* Checks to make sure we have some data available in the bitstream
    buffer; if there's less than a certain "water level", shift the
    data back and bring in some more. */
-static int bs_fill() {
+static int bs_fill(void) {
 	int n;
 
 	/* Make sure we don't underflow */
@@ -150,7 +161,7 @@ errorout:
 
 /* Open an MPEG stream and prepare for decode */
 static int xing_init(const char *fn) {
-	uint32	fd;
+	uint32_t	fd;
 
 	/* Open the file */
 	mp3_fd = fd = fs_open(fn, O_RDONLY);
@@ -201,7 +212,7 @@ static int xing_init(const char *fn) {
 		printf("Final index is %d\r\n", (bs_ptr - bs_buffer));
 	}
 
-	if (((uint8)bs_ptr[0] != 0xff) && (!((uint8)bs_ptr[1] & 0xe0))) {
+	if (((uint8_t)bs_ptr[0] != 0xff) && (!((uint8_t)bs_ptr[1] & 0xe0))) {
 		printf("Definitely not an MPEG file\r\n");
 		goto errorout;
 	}
@@ -280,8 +291,6 @@ static void xing_shutdown() {
 
 
 /************************************************************************/
-
-#include <dc/sound/stream.h>
 
 /* Status flag */
 #define STATUS_INIT	0

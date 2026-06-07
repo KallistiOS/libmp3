@@ -1,7 +1,7 @@
 /* Tryptonite
 
    sndmp3.c
-   (c)2000 Dan Potter
+   (c)2000 Megan Potter
 
    An MP3 player using sndstream and MPGLIB
 
@@ -37,7 +37,7 @@ static char *pcm_buffer = NULL, *pcm_ptr;
 static int pcm_count;
 
 /* MPEG file */
-static uint32		mp3_fd;
+static uint32_t		mp3_fd;
 static struct mpstr	mp;
 
 /* Name of last played MP3 file */
@@ -46,7 +46,7 @@ static char mp3_last_fn[256];
 /* Checks to make sure we have some data available in the bitstream
    buffer; if there's less than a certain "water level", shift the
    data back and bring in some more. */
-static int bs_fill() {
+static int bs_fill(void) {
 	int n;
 
 	/* Read in some more data */
@@ -132,7 +132,7 @@ errorout:
 /* Open an MPEG stream and prepare for decode */
 static int mpglib_init(const char *fn) {
 	int	size;
-	uint32	fd;
+	uint32_t	fd;
 
 	/* Open the file */
 	mp3_fd = fd = fs_open(fn, O_RDONLY);
@@ -183,7 +183,7 @@ static int mpglib_init(const char *fn) {
 		printf("Final index is %d\r\n", (bs_ptr - bs_buffer));
 	}
 
-	if (((uint8)bs_ptr[0] != 0xff) && (!((uint8)bs_ptr[1] & 0xe0))) {
+	if (((uint8_t)bs_ptr[0] != 0xff) && (!((uint8_t)bs_ptr[1] & 0xe0))) {
 		printf("Definitely not an MPEG file\r\n");
 		goto errorout;
 	}
@@ -250,7 +250,7 @@ static void mpglib_shutdown() {
 static volatile int sndmp3_status;
 
 /* Wait until the MP3 thread is started and ready */
-void sndmp3_wait_start() {
+void sndmp3_wait_start(void) {
 	while (sndmp3_status != STATUS_READY)
 		;
 }
@@ -263,7 +263,7 @@ static volatile int sndmp3_loop;
 
 /* Call this function as a thread to handle playback. Playback will 
    stop and this thread will return when you call sndmp3_shutdown(). */
-static void sndmp3_thread() {
+static void sndmp3_thread(void) {
 	int sj;
 	
 	/* Main command loop */
@@ -357,7 +357,7 @@ int sndmp3_start(const char *fn, int loop) {
 }
 
 /* Stop playback (implies song unload) */
-void sndmp3_stop() {
+void sndmp3_stop(void) {
 	if (sndmp3_status == STATUS_READY)
 		return;
 	sndmp3_status = STATUS_STOPPING;
@@ -368,7 +368,7 @@ void sndmp3_stop() {
 }
 
 /* Shutdown the player */
-void sndmp3_shutdown() {
+void sndmp3_shutdown(void) {
 	sndmp3_status = STATUS_QUIT;
 	sem_signal(sndmp3_halt_sem);
 	while (sndmp3_status != STATUS_ZOMBIE)
@@ -386,7 +386,7 @@ void sndmp3_volume(int vol) {
 #include "sfxmgr.h"
 #include "sndsrv_abi.h"
 static abi_sndsrv_t ssabi;
-static void sndmp3_svc_init() {
+static void sndmp3_svc_init(void) {
 	memset(&ssabi, 0, sizeof(ssabi));
 	ssabi.hdr.version = ABI_MAKE_VER(1,0,0);
 
@@ -404,7 +404,7 @@ static void sndmp3_svc_init() {
 } */
 
 /* The main loop for the sound server */
-void sndmp3_mainloop() {
+void sndmp3_mainloop(void) {
 	/* Allocate a semaphore for temporarily halting sndmp3 */
 	sndmp3_halt_sem = sem_create(0);
 

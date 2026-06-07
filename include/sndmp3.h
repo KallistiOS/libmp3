@@ -1,7 +1,7 @@
 /* KallistiOS ##version##
 
    sndmp3.h
-   (c)2000 Dan Potter
+   (c)2000 Megan Potter
 */
 
 #ifndef __SNDMP3_H
