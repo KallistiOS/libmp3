@@ -1,7 +1,7 @@
 /* KallistiOS ##version##
 
    sndserver.h
-   (c)2000 Dan Potter
+   (c)2000 Megan Potter
 */
 
 #ifndef __SNDSERVER_H
@@ -11,16 +11,16 @@
 __BEGIN_DECLS
 
 /* Starts the MP3 server thread */
-int mp3_init();
+int mp3_init(void);
 
 /* Starts a song playing */
 int mp3_start(const char *fn, int loop);
 
 /* Stops the playing song */
-int mp3_stop();
+int mp3_stop(void);
 
 /* Shuts down the MP3 server thread */
-int mp3_shutdown();
+int mp3_shutdown(void);
 
 /* Controls volume level of stream */
 void mp3_volume(int vol);

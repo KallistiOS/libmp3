@@ -4,7 +4,6 @@
 
 TARGET = libmp3.a
 OBJS =
-LIB_OBJS = build/*.o
 SUBDIRS = xingmp3 libmp3
 LOCAL_CLEAN = build/*.o build/*.a
 # SUBDIRS = mpglib libmp3
@@ -15,6 +14,6 @@ include $(KOS_BASE)/addons/Makefile.prefab
 
 # creates the kos link to the headers
 create_kos_link:
-	rm -f ../include/mp3
-	ln -s ../libmp3/include ../include/mp3
+	rm -f $(KOS_PORTS)/include/mp3
+	ln -s $(CURDIR)/include $(KOS_PORTS)/include/mp3
 

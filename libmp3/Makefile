@@ -1,7 +1,7 @@
 # KallistiOS ##version##
 #
 # libmp3/Makefile
-# (c)2001 Dan Potter
+# (c)2001 Megan Potter
 
 OBJS = main.o sndmp3.o
 
