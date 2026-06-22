@@ -8,6 +8,9 @@ SUBDIRS = xingmp3 libmp3
 LOCAL_CLEAN = build/*.o build/*.a
 # SUBDIRS = mpglib libmp3
 
+# The code is old and cant stand modern scrutiny
+CFLAGS +=  -std=c17
+
 defaultall: create_kos_link $(OBJS) subdirs linklib
 
 include $(KOS_BASE)/addons/Makefile.prefab
