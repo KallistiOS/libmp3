@@ -28,6 +28,7 @@
 #include <dc/sound/stream.h>
 #include <kos/sem.h>
 #include <kos/thread.h>
+#include <kos/fs.h>
 
 /************************************************************************/
 #include <mhead.h>		/* From xingmp3 */
